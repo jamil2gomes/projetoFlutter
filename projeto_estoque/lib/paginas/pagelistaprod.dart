@@ -56,7 +56,7 @@ class _PageListaProdState extends State<PageListaProd> {
   Future<List<Produto>> _buscardados() async {
     List<Produto> lista = new List<Produto>();
 
-    String url = "localhost:8080/produtos";
+    String url = "http://localhost:8080/produtos";
 
     http.Response resposta = await http.get(url);
     if (resposta.statusCode == HttpStatus.ok) {
@@ -98,7 +98,7 @@ class _PageListaProdState extends State<PageListaProd> {
           // ),
           title: Text(itemprod.nome),
           subtitle: Text(itemprod.categoria),
-          trailing: Text(itemprod.preco.toString()),
+          trailing: Text(itemprod.quantidade.toString()),
           onTap: () {
             //Ao clicar no item da lista ele irá chamar esta função
             //Em nosso caso, vamos navegar para uma próxima página
