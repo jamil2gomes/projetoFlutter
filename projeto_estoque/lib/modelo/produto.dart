@@ -48,6 +48,6 @@ class Produto {
 
   @override
   String toString() {
-    return "Produto[$nome, $descricao]";
+    return "Produto[$nome, $descricao, $quantidade]";
   }
 }
