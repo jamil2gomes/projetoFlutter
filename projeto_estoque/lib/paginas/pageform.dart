@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_estoque/modelo/produto.dart';
+import 'package:projeto_estoque/helpers/databaseHelper.dart';
+import 'package:projeto_estoque/paginas/pagelistaprod.dart';
 
 class FormPage extends StatefulWidget {
-  FormPage({Key key, this.title}) : super(key: key);
-  final String title;
+  final Produto prod;
+
+  FormPage({this.prod});
+
   @override
   _FormPageState createState() => _FormPageState();
 }
@@ -11,7 +16,31 @@ class _FormPageState extends State<FormPage> {
   String texto = "";
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  var produto = new Produto();
+  Produto produto;
+  var db = DatabaseHelper();
+
+  final _nome = TextEditingController();
+  final _desc = TextEditingController();
+  final _qtd = TextEditingController();
+  final _cat = TextEditingController();
+  final _prio = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.prod == null) {
+      produto = Produto();
+    } else {
+      produto = Produto.fromJson(widget.prod.toJson());
+
+      _nome.text = produto.nome;
+      _cat.text = produto.categoria;
+      _desc.text = produto.descricao;
+      _qtd.text = produto.quantidade.toString();
+      _prio.text = produto.prioridade.toString();
+    }
+  }
 
   bool _isPrioridade = false;
 
@@ -43,6 +72,7 @@ class _FormPageState extends State<FormPage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  controller: _nome,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       labelText: 'Nome Produto', hintText: 'Detergente'),
@@ -51,6 +81,7 @@ class _FormPageState extends State<FormPage> {
                   onSaved: (input) => produto.nome = input,
                 ),
                 TextFormField(
+                  controller: _desc,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       labelText: 'Descrição', hintText: 'Detergente X....'),
@@ -60,6 +91,7 @@ class _FormPageState extends State<FormPage> {
                   onSaved: (input) => produto.descricao = input,
                 ),
                 TextFormField(
+                  controller: _cat,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       labelText: 'Categoria', hintText: 'Limpeza'),
@@ -68,6 +100,7 @@ class _FormPageState extends State<FormPage> {
                   onSaved: (input) => produto.categoria = input,
                 ),
                 TextFormField(
+                  controller: _qtd,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Quantidade'),
                   validator: (input) =>
@@ -119,6 +152,10 @@ class _FormPageState extends State<FormPage> {
                           ? texto = "Produto salvo com sucesso"
                           : texto = "Erro ao salvar Produto";
                       showSnackBar(texto);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return PageListaProd();
+                      }));
                     },
                     color: Colors.blue,
                   ),
@@ -136,6 +173,7 @@ class _FormPageState extends State<FormPage> {
     // First validate form.
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save(); // Save our form now.
+      db.insert(produto);
       print(produto.toString());
       return true;
     }

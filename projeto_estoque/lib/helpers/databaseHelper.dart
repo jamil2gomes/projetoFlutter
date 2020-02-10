@@ -43,7 +43,7 @@ class DatabaseHelper {
 
   void _createDB(Database db, int version) async {
     String sql =
-        "CREATE TABLE $produtoTable ($colId INTERGER PRIMARY KEY AUTOINCREMENT, $colNome TEXT, $colDesc TEXT, $colPrioridade NUMERIC, $colQtd INTEGER)";
+        "CREATE TABLE $produtoTable ($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colNome TEXT, $colDesc TEXT, $colPrioridade NUMERIC, $colQtd INTEGER)";
 
     await db.execute(sql);
   }

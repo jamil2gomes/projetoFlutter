@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:projeto_estoque/paginas/pageinicial.dart';
+import 'package:projeto_estoque/paginas/pageform.dart';
 import 'dart:io';
 import 'dart:convert' as converte;
-
+import 'package:projeto_estoque/helpers/databaseHelper.dart';
 import '../modelo/produto.dart';
-// import 'pageavaliatcc.dart';
 
 class PageListaProd extends StatefulWidget {
   @override
@@ -13,6 +12,19 @@ class PageListaProd extends StatefulWidget {
 }
 
 class _PageListaProdState extends State<PageListaProd> {
+  var _db = DatabaseHelper();
+  List<Produto> _produtos = List<Produto>();
+
+  @override
+  void initState() {
+    super.initState();
+    this._db.getProdutos().then((prods) {
+      setState(() {
+        this._produtos = prods;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,22 +42,12 @@ class _PageListaProdState extends State<PageListaProd> {
   }
 
   _montarlistadinamica(BuildContext context) {
-    //O FutureBuilder diferente do Future simples, permite retornar um Widget
-    //Nesta implementação usaremos ele para retornar um Listview preenchido
-    //com dados vindos da Internet.
-    //Em seu construtor temos o "future" que será o local de recebimento dos
-    //dados e "builder" que recebe um função que tem como parâmetro o "contexto" e o
-    //snapshot que "guarda" os dados a serem recebidos a partir de uma ação assíncrona.
     return FutureBuilder(
         future: _buscardados(),
         builder: (context, snapshot) {
-          //Se já tiver os dados, ele chama a função que cria a ListView
-          //Perceba que a função recebe o snapshot.data, dentro deste recurso estarão os dados
-          //a serem apresentados no ListView
           if (snapshot.hasData) {
             return _crialistview(snapshot.data);
           } else {
-            //Enquanto a Future não tem os dados, ele apresenta um CircularProgress
             return Center(
               child: CircularProgressIndicator(),
             );
@@ -56,7 +58,7 @@ class _PageListaProdState extends State<PageListaProd> {
   Future<List<Produto>> _buscardados() async {
     List<Produto> lista = new List<Produto>();
 
-    var url = "http://mauro-nlst.localhost.run/produtos";
+    var url = "http://localhost:8080/produtos";
 
     http.Response resposta = await http.get(url, headers: {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8"
@@ -75,42 +77,30 @@ class _PageListaProdState extends State<PageListaProd> {
       //Falha ao chamar o serviço
       print("Falha ao receber os dados da Internet.");
     }
-
-    return Future.value(lista);
+    this._produtos.addAll(lista);
+    return Future.value(this._produtos);
   }
 
   _crialistview(listaprod) {
     return ListView.builder(
       itemCount: listaprod.length,
       itemBuilder: (context, index) {
-        //Recuperamos um objeto que estava dentro da Lista retornada pelo
-        //FutureBuilder (snapshot.data)
         Produto itemprod = listaprod[index];
-        //Aqui tomamos uma decisão baseado na nota do aluno
-        //Se a nota do aluno for "0.0", estamos considerando que ele ainda não
-        //foi avaliado, mudando a imagem a ser apresentada na lista
-        // String urlimagem = "";
-        // if (itemprod.preco == 0.0) {
-        //   // urlimagem = "assets/images/navaliado.png";
-        // } else {
-        //   // urlimagem = "assets/images/avaliado.png";
-        // }
 
         return ListTile(
-          // leading: CircleAvatar(
-          //   backgroundImage: AssetImage(urlimagem),
-          // ),
+          leading: CircleAvatar(
+            backgroundImage: AssetImage('assets/images/produto.png'),
+          ),
           title: Text(itemprod.nome),
           subtitle: Text(itemprod.categoria),
           trailing: Text(itemprod.quantidade.toString()),
           onTap: () {
-            //Ao clicar no item da lista ele irá chamar esta função
-            //Em nosso caso, vamos navegar para uma próxima página
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              //O return indica para onde iremos navegar, neste caso para PageAvaliaTcc
-              // return PageAvaliaTcc(itemprod);
-              return PageInicial();
-            }));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FormPage(
+                          prod: itemprod,
+                        )));
           },
         );
       },

@@ -7,8 +7,7 @@ class Produto {
   bool prioridade;
 
   Produto(
-      {this.id,
-      this.nome,
+      {this.nome,
       this.categoria,
       this.quantidade,
       this.prioridade,
