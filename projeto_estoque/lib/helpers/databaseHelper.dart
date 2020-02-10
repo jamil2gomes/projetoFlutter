@@ -56,9 +56,15 @@ class DatabaseHelper {
     return resultado;
   }
 
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
+  Future<List<Produto>> getProdutos() async {
     Database db = await this.database;
-    return await db.query(produtoTable);
+    var resultado = await db.query(produtoTable);
+
+    List<Produto> lista = resultado.isNotEmpty
+        ? resultado.map((c) => Produto.fromJson(c)).toList()
+        : [];
+
+    return lista;
   }
 
   Future close() async {
