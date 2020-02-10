@@ -14,6 +14,7 @@ class DatabaseHelper {
   String colNome = "nome";
   String colDesc = "descricao";
   String colQtd = "quantidade";
+  String colCat = "categoria";
   String colPrioridade = "prioridade";
 
   DatabaseHelper._createInstance();
@@ -35,15 +36,15 @@ class DatabaseHelper {
 
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'produto.db';
+    String path = directory.path + 'produtoDB.db';
 
-    var produtoDB = await openDatabase(path, version: 1, onCreate: _createDB);
+    var produtoDB = await openDatabase(path, version: 2, onCreate: _createDB);
     return produtoDB;
   }
 
   void _createDB(Database db, int version) async {
     String sql =
-        "CREATE TABLE $produtoTable ($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colNome TEXT, $colDesc TEXT, $colPrioridade NUMERIC, $colQtd INTEGER)";
+        "CREATE TABLE $produtoTable ($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colNome TEXT, $colDesc TEXT, $colPrioridade NUMERIC, $colQtd INTEGER, $colCat INTEGER)";
 
     await db.execute(sql);
   }

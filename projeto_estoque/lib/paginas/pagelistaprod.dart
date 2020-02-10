@@ -20,6 +20,7 @@ class _PageListaProdState extends State<PageListaProd> {
     super.initState();
     this._db.getProdutos().then((prods) {
       setState(() {
+        this._produtos.clear();
         this._produtos = prods;
       });
     });
@@ -58,7 +59,7 @@ class _PageListaProdState extends State<PageListaProd> {
   Future<List<Produto>> _buscardados() async {
     List<Produto> lista = new List<Produto>();
 
-    var url = "http://localhost:8080/produtos";
+    var url = "http://jamil-jov4.localhost.run/produtos";
 
     http.Response resposta = await http.get(url, headers: {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8"
@@ -77,6 +78,7 @@ class _PageListaProdState extends State<PageListaProd> {
       //Falha ao chamar o serviço
       print("Falha ao receber os dados da Internet.");
     }
+
     this._produtos.addAll(lista);
     return Future.value(this._produtos);
   }
@@ -92,15 +94,13 @@ class _PageListaProdState extends State<PageListaProd> {
             backgroundImage: AssetImage('assets/images/produto.png'),
           ),
           title: Text(itemprod.nome),
-          subtitle: Text(itemprod.categoria),
+          subtitle: Text(itemprod.categoria.toString()),
           trailing: Text(itemprod.quantidade.toString()),
           onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => FormPage(
-                          prod: itemprod,
-                        )));
+                    builder: (context) => FormPage(prod: itemprod)));
           },
         );
       },

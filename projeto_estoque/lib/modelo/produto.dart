@@ -2,7 +2,7 @@ class Produto {
   int id;
   String nome;
   String descricao;
-  String categoria;
+  int categoria;
   int quantidade;
   bool prioridade;
 

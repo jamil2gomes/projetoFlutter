@@ -25,9 +25,12 @@ class _FormPageState extends State<FormPage> {
   final _cat = TextEditingController();
   final _prio = TextEditingController();
 
+  int selectedRadio;
+
   @override
   void initState() {
     super.initState();
+    selectedRadio = 0;
 
     if (widget.prod == null) {
       produto = Produto();
@@ -35,11 +38,17 @@ class _FormPageState extends State<FormPage> {
       produto = Produto.fromJson(widget.prod.toJson());
 
       _nome.text = produto.nome;
-      _cat.text = produto.categoria;
+      _cat.text = produto.categoria.toString();
       _desc.text = produto.descricao;
       _qtd.text = produto.quantidade.toString();
       _prio.text = produto.prioridade.toString();
     }
+  }
+
+  _setSelectedRadio(int val) {
+    setState(() {
+      selectedRadio = val;
+    });
   }
 
   bool _isPrioridade = false;
@@ -91,15 +100,6 @@ class _FormPageState extends State<FormPage> {
                   onSaved: (input) => produto.descricao = input,
                 ),
                 TextFormField(
-                  controller: _cat,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                      labelText: 'Categoria', hintText: 'Limpeza'),
-                  validator: (input) =>
-                      input.length < 3 ? 'Digite uma categoria válida' : null,
-                  onSaved: (input) => produto.categoria = input,
-                ),
-                TextFormField(
                   controller: _qtd,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Quantidade'),
@@ -107,28 +107,37 @@ class _FormPageState extends State<FormPage> {
                       input.length <= 0 ? 'Digite uma quantidade válida' : null,
                   onSaved: (input) => produto.quantidade = int.parse(input),
                 ),
-                // Row(
-                //   children: <Widget>[
-                //     Text('Masculino'),
-                //     Radio(
-                //       value: 0,
-                //       groupValue: selectedRadio,
-                //       onChanged: (int val) {
-                //         _setSelectedRadio(val);
-                //         usuario.sexo = selectedRadio;
-                //       },
-                //     ),
-                //     Text('Feminino'),
-                //     Radio(
-                //       value: 1,
-                //       groupValue: selectedRadio,
-                //       onChanged: (val) {
-                //         _setSelectedRadio(val);
-                //         usuario.sexo = selectedRadio;
-                //       },
-                //     ),
-                //   ],
-                // ),
+                Row(
+                  children: <Widget>[
+                    Text('Limpeza'),
+                    Radio(
+                      value: 0,
+                      groupValue: selectedRadio,
+                      onChanged: (int val) {
+                        _setSelectedRadio(val);
+                        produto.categoria = selectedRadio;
+                      },
+                    ),
+                    Text('Bebida'),
+                    Radio(
+                      value: 1,
+                      groupValue: selectedRadio,
+                      onChanged: (val) {
+                        _setSelectedRadio(val);
+                        produto.categoria = selectedRadio;
+                      },
+                    ),
+                    Text('Alimento'),
+                    Radio(
+                      value: 1,
+                      groupValue: selectedRadio,
+                      onChanged: (val) {
+                        _setSelectedRadio(val);
+                        produto.categoria = selectedRadio;
+                      },
+                    ),
+                  ],
+                ),
                 Row(
                   children: <Widget>[
                     Checkbox(
@@ -148,14 +157,17 @@ class _FormPageState extends State<FormPage> {
                       style: new TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
-                      submit()
-                          ? texto = "Produto salvo com sucesso"
-                          : texto = "Erro ao salvar Produto";
+                      if (submit()) {
+                        texto = "Produto salvo com sucesso";
+                        showSnackBar(texto);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return PageListaProd();
+                        }));
+                      }
+
+                      texto = "Erro ao salvar Produto";
                       showSnackBar(texto);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return PageListaProd();
-                      }));
                     },
                     color: Colors.blue,
                   ),
