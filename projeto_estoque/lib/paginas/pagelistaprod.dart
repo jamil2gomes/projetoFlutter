@@ -80,6 +80,7 @@ class _PageListaProdState extends State<PageListaProd> {
     }
 
     this._produtos.addAll(lista);
+    lista.clear();
     return Future.value(this._produtos);
   }
 

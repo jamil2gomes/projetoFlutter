@@ -129,7 +129,7 @@ class _FormPageState extends State<FormPage> {
                     ),
                     Text('Alimento'),
                     Radio(
-                      value: 1,
+                      value: 2,
                       groupValue: selectedRadio,
                       onChanged: (val) {
                         _setSelectedRadio(val);
