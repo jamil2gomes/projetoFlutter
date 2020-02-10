@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import '../modelo/produto.dart';
-import 'dart:async';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+//import 'dart:async';
+//import 'package:path/path.dart';
+//import 'package:sqflite/sqflite.dart';
 
-class PageForm extends StatefulWidget {
-  PageForm({Key key}) : super(key: key);
-
+class FormPage extends StatefulWidget {
+  FormPage({Key key, this.title}) : super(key: key);
+  final String title;
   @override
-  _PageFormState createState() => _PageFormState();
+  _FormPageState createState() => _FormPageState();
 }
 
-class _PageFormState extends State<PageForm> {
+class _FormPageState extends State<FormPage> {
+  String texto = "";
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
   var produto = new Produto();
 
   bool _isPrioridade = false;
@@ -23,12 +25,20 @@ class _PageFormState extends State<PageForm> {
     });
   }
 
+  showSnackBar(String texto) {
+    final snackBar = SnackBar(
+      content: Text(texto),
+      duration: Duration(seconds: 4),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Formulário Produto"),
-      ),
+      key: _scaffoldKey,
+      appBar: AppBar(title: Text("Formulário Produto")),
       body: Container(
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -60,6 +70,13 @@ class _PageFormState extends State<PageForm> {
                   validator: (input) =>
                       input.length < 3 ? 'Digite uma categoria válida' : null,
                   onSaved: (input) => produto.categoria = input,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(labelText: 'Quantidade'),
+                  validator: (input) =>
+                      input.length <= 0 ? 'Digite uma quantidade válida' : null,
+                  onSaved: (input) => produto.quantidade = int.parse(input),
                 ),
                 // Row(
                 //   children: <Widget>[
@@ -102,15 +119,10 @@ class _PageFormState extends State<PageForm> {
                       style: new TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
-                      String texto = "";
                       submit()
                           ? texto = "Produto salvo com sucesso"
                           : texto = "Erro ao salvar Produto";
-
-                      final snackBar = SnackBar(
-                        content: Text(texto),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
+                      showSnackBar(texto);
                     },
                     color: Colors.blue,
                   ),
@@ -128,10 +140,9 @@ class _PageFormState extends State<PageForm> {
     // First validate form.
     if (this._formKey.currentState.validate()) {
       _formKey.currentState.save(); // Save our form now.
-      print(produto);
+      print(produto.toString());
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 }
