@@ -56,12 +56,16 @@ class _PageListaProdState extends State<PageListaProd> {
   Future<List<Produto>> _buscardados() async {
     List<Produto> lista = new List<Produto>();
 
-    String url = "http://localhost:8080/produtos";
+    var url = "http://mauro-nlst.localhost.run/produtos";
 
-    http.Response resposta = await http.get(url);
+    http.Response resposta = await http.get(url, headers: {
+      HttpHeaders.contentTypeHeader: "application/json; charset=utf-8"
+    });
+
     if (resposta.statusCode == HttpStatus.ok) {
       //A chamada aconteceu com sucesso
-      var listaretorno = converte.jsonDecode(resposta.body);
+      var listaretorno =
+          converte.jsonDecode(converte.utf8.decode(resposta.bodyBytes));
       for (var prod in listaretorno) {
         //Transformamos nosso mapa em um objeto Produto
         Produto objprod = Produto.fromJson(prod);
