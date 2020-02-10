@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import '../modelo/produto.dart';
-//import 'dart:async';
-//import 'package:path/path.dart';
-//import 'package:sqflite/sqflite.dart';
 
 class FormPage extends StatefulWidget {
   FormPage({Key key, this.title}) : super(key: key);
