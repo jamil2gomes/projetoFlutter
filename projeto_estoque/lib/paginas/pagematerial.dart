@@ -7,6 +7,7 @@ class PageMaterial extends StatelessWidget {
     return MaterialApp(
         title: 'AppEstoque',
         theme: ThemeData(primarySwatch: Colors.blue),
+        debugShowCheckedModeBanner: false,
         home: PageInicial());
   }
 }

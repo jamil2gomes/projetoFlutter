@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_estoque/paginas/pagelistaprod.dart';
+import 'pageform.dart';
 // import 'pagelistatcc.dart';
 
 class PageInicial extends StatelessWidget {
@@ -23,7 +23,7 @@ class PageInicial extends StatelessWidget {
       padding: EdgeInsets.all(6),
       child: Column(
         children: <Widget>[
-          _imagem('assets/images/iconproduct.png'),
+          _imagem("assets/images/productcheck.png"),
           _texto('Gerenciamento de Estoque'),
           _botao(context),
         ],
@@ -47,7 +47,7 @@ class PageInicial extends StatelessWidget {
       child: Text('AVANÇAR'),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PageListaProd();
+          return FormPage();
         }));
       },
     );
