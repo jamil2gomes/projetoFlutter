@@ -23,7 +23,7 @@ class PageInicial extends StatelessWidget {
       padding: EdgeInsets.all(6),
       child: Column(
         children: <Widget>[
-          // _imagem('assets/images/logotcc.png'),
+          _imagem('assets/images/iconproduct.png'),
           _texto('Gerenciamento de Estoque'),
           _botao(context),
         ],
