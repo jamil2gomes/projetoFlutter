@@ -16,19 +16,22 @@ class PageInicial extends StatelessWidget {
 
   _body(BuildContext context) {
     return Container(
-      color: Colors.orange,
-      width: double.infinity,
-      height: double.infinity,
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(6),
-      child: Column(
-        children: <Widget>[
-          _imagem("assets/images/productcheck.png"),
-          _texto('Gerenciamento de Estoque'),
-          _botao(context),
-        ],
-      ),
-    );
+        color: Colors.lightBlueAccent,
+        width: double.infinity,
+        height: double.infinity,
+        margin: EdgeInsets.all(16),
+        padding: EdgeInsets.all(6),
+        child: Align(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _imagem("assets/images/productcheck.png"),
+              _texto('Gerenciamento de Estoque'),
+              _botao(context),
+            ],
+          ),
+        ));
   }
 
   _imagem(String url) {
@@ -44,12 +47,16 @@ class PageInicial extends StatelessWidget {
 
   _botao(BuildContext context) {
     return RaisedButton(
-      child: Text('AVANÇAR'),
+      child: Text(
+        'AVANÇAR',
+        style: new TextStyle(color: Colors.white),
+      ),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return FormPage();
         }));
       },
+      color: Colors.blue,
     );
   }
 }
